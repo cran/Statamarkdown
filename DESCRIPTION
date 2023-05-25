@@ -1,9 +1,9 @@
 Package: Statamarkdown
-Version: 0.7.2
-Date: 2023-02-13
+Version: 0.7.4
+Date: 2023-05-25
 Title: 'Stata' Markdown
 Description: Settings and functions to extend the 'knitr' 'Stata' engine.
-Imports: knitr (>= 1.15), xfun (>= 0.4)
+Imports: knitr (>= 1.43), xfun (>= 0.4)
 Suggests: rmarkdown
 SystemRequirements: Stata
 Authors@R: c(
@@ -17,9 +17,9 @@ License: MIT + file LICENSE
 BugReports: https://github.com/Hemken/Statamarkdown/issues
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2023-02-14 19:01:45 UTC; hemken
+Packaged: 2023-05-25 17:00:40 UTC; hemken
 Author: Doug Hemken [aut, cre] (SSCC, Univ. of Wisconsin-Madison),
   Tom Palmer [ctb] (MacOS, linux),
   Philipp Lepert [ctb]
 Repository: CRAN
-Date/Publication: 2023-02-15 12:40:02 UTC
+Date/Publication: 2023-05-25 17:50:02 UTC
