@@ -4,19 +4,21 @@ find_stata <- function(message=TRUE) {
 #  stataexe <- NULL
   for (d in c("C:/Program Files","C:/Program Files (x86)")) {
     if (stataexe=="" & dir.exists(d)) {
-      for (v in seq(18,11,-1)) {
-        dv <- paste(d,paste0("Stata",v), sep="/")
-        if (dir.exists(dv)) {
-          for (f in c("Stata", "StataIC", "StataSE", "StataMP", "StataBE",
-               "Stata-64", "StataIC-64", "StataSE-64", "StataMP-64", "StataBE-64")) {
-            dvf <- paste(paste(dv, f, sep="/"), "exe", sep=".")
-            if (file.exists(dvf)) {
-              stataexe <- dvf
-              if (message) packageStartupMessage("Stata found at ", stataexe)
-            }
-            if (stataexe != "") break
+      for (v in seq(19,11,-1)) {
+        for (dirstub in c("Stata", "StataNow")){
+          dv <- paste(d,paste0("Stata",v), sep="/")
+          if (dir.exists(dv)) {
+            for (f in c("Stata", "StataIC", "StataSE", "StataMP", "StataBE",
+                        "Stata-64", "StataIC-64", "StataSE-64", "StataMP-64", "StataBE-64")) {
+              dvf <- paste(paste(dv, f, sep="/"), "exe", sep=".")
+              if (file.exists(dvf)) {
+                stataexe <- dvf
+                if (message) packageStartupMessage("Stata found at ", stataexe)
+              }
+              if (stataexe != "") break
+              }
           }
-       }
+        }
        if (stataexe != "") break
       }
     }
@@ -44,7 +46,7 @@ find_stata <- function(message=TRUE) {
       }
       else
         for (d in c("/software/stata", "/usr/local/sbin", "/usr/local/bin", "/usr/sbin",
-                    "/usr/local/stata18", "/usr/local/stata17", "/usr/local/stata16",
+                    "/usr/local/stata19", "/usr/local/stata18", "/usr/local/stata17", "/usr/local/stata16",
                     "/usr/local/stata15")) {
           df <- paste(d, f, sep="/")
           if (file.exists(df)) {
