@@ -1,8 +1,8 @@
-5f1f4fd375c9422ac2ab9b8a048678cc *DESCRIPTION
+50837f73d3603742fd0c799ab84d40d8 *DESCRIPTION
 d64483301ef3ea48b479085f1d2f727c *LICENSE
 5d1d8115f767d6c8caf955ad28f6ac76 *NAMESPACE
 586d02f8d2dcd6ada5c5ff3aa9f58bb8 *R/engine_output.R
-8d227cab78235e59902e859c84a03e88 *R/find_stata.r
+14a1ced253eccb0fab2ae85573f727ea *R/find_stata.r
 872f36991792076f3081ffd9393f20ea *R/misc.r
 1929c9c1ce18308c35d458dc77be7882 *R/spinstata.R
 fc8bc6bd59ab79d03aa01a365a278c8a *R/stata_collectcode.r
