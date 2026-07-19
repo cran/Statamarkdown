@@ -10,46 +10,40 @@ stata_engine_output <- function(x, options) {
       #  Done as a single string because a deep folder path can create awkward line breaks
       #  within the word "profile"
       if (length(x) != 1) x = single_string(x)
-      noprofile <- sub("^.*[R|r]unning[[:space:]].*p(\\\n>[[:space:]])?r(\\\n>[[:space:]])?o(\\\n>[[:space:]])?f(\\\n>[[:space:]])?i(\\\n>[[:space:]])?l(\\\n>[[:space:]])?e(\\\n>[[:space:]])?\\.(\\\n>[[:space:]])?d(\\\n>[[:space:]])?o(\\\n>[[:space:]])?[[:space:]](\\\n>[[:space:]])?\\.(\\\n>[[:space:]])?\\.(\\\n>[[:space:]])?\\.[[:space:]]?[[:space:]]?", "", x)
+      noprofile <- sub("^.*[Rr]unning[[:space:]].*p(\\\n>[[:space:]])?r(\\\n>[[:space:]])?o(\\\n>[[:space:]])?f(\\\n>[[:space:]])?i(\\\n>[[:space:]])?l(\\\n>[[:space:]])?e(\\\n>[[:space:]])?\\.(\\\n>[[:space:]])?d(\\\n>[[:space:]])?o(\\\n>[[:space:]])?[[:space:]](\\\n>[[:space:]])?\\.(\\\n>[[:space:]])?\\.(\\\n>[[:space:]])?\\.[[:space:]]?[[:space:]]?", "", x)
       x <- unlist(strsplit(noprofile, "\n"))
       # remove "end of do-file"
       endofdofile <- grep("end of do-file", x)
-      x <- x[-endofdofile]
+      if (length(endofdofile) > 0) x <- x[-endofdofile]
       y <- x
 
       # Remove command echo in Stata log
-      if ((is.null(options$cleanlog) || length(options$cleanlog)==0) || options$cleanlog==TRUE) {
+      if (length(options$cleanlog)==0 || options$cleanlog==TRUE) {
 
         # Find command lines
         commandlines <- grep("^[[:space:]]?\\.[[:space:]]", y)
-        # Loop commands appear on more than one line, with line numbers
         if (length(commandlines)>0) {
-          loopcommands <- grep("^[[:space:]]+[[:digit:]]+\\.", y)
-        }
-        if (length(commandlines)>0 && length(loopcommands)>0) {
-          for (i in 1:length(loopcommands)) {
-            if ((loopcommands[i]-1) %in% commandlines) {
-              commandlines <- c(commandlines, loopcommands[i])
-            }
+          # Loop commands appear on more than one line, with line numbers,
+          # and long command lines are wrapped, with an initial ">".
+          # Both may run over several lines, so keep adding lines that
+          # follow an already-identified command line until none are left.
+          followers <- c(grep("^[[:space:]]+[[:digit:]]+\\.", y),
+                         grep("^>[[:space:]]", y))
+          repeat {
+            newlines <- followers[!(followers %in% commandlines) &
+                                    (followers - 1L) %in% commandlines]
+            if (length(newlines)==0) break
+            commandlines <- c(commandlines, newlines)
           }
+          # remove
+          y <- y[-(commandlines)]
         }
-        # Long command lines are wrapped, with an initial ">"
-        if (length(commandlines)>0) {
-          continuations <- grep("^>[[:space:]]", y)
-        }
-        if (length(commandlines)>0 && length(continuations)>0) {
-          for (i in 1:length(continuations)) {
-            if ((continuations[i]-1) %in% commandlines) {
-              commandlines <- c(commandlines, continuations[i])
-            }
-          }
-        }
-        # remove
-        if (length(commandlines)>0) {y <- y[-(commandlines)]}
 
         # Some command lines have a leading space?
-        if (length(grep("^[[:space:]*]\\.", y))>0) {
-          y <- y[-(grep("^[[:space:]*]\\.", y))]
+        # Require whitespace (or end of line) after the dot so that
+        # output values such as " .5227" are not mistaken for commands
+        if (length(grep("^[[:space:]*]\\.([[:space:]]|$)", y))>0) {
+          y <- y[-(grep("^[[:space:]*]\\.([[:space:]]|$)", y))]
         }
       }
 
@@ -57,7 +51,8 @@ stata_engine_output <- function(x, options) {
       if (length(y)>0 && y[length(y)] != "") { y <- c(y, "") }
 
       # Remove blank lines at the top of any Stata log
-      firsttext <- min(grep("[[:alnum:]]", y))
+      alnum_lines <- grep("[[:alnum:]]", y)
+      firsttext <- if (length(alnum_lines) > 0) min(alnum_lines) else Inf
       if (firsttext != Inf && firsttext != 1) {
         y <- y[-(1:(firsttext-1))]
         }

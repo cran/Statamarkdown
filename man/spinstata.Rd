@@ -4,8 +4,8 @@
 Convert a specially marked up Stata "do" file to Markdown and HTML.
 }
 \description{
-This function takes a Stata file containing special mark up in
-it's comments, and converts it to
+This function takes a Stata file containing special markup in
+its comments, and converts it to
 Markdown and HTML documents (or one of several other formats).
 }
 \usage{
@@ -13,15 +13,15 @@ spinstata(statafile, text=NULL, keep=FALSE, ...)
 }
 \arguments{
 \item{statafile}{A character string with the name of a Stata
-"do" file, containing markup in it's comments.}
+"do" file, containing markup in its comments.}
 \item{text}{A character string in place of a file.}
 \item{keep}{Whether to save intermediate files.}
 \item{...}{options passed to \code{knitr::spin}}
 }
 
 \details{
-This function takes a Stata file containing special mark up in
-it's comments, and converts it into knitr's "spin" format.
+This function takes a Stata file containing special markup in
+its comments, and converts it into knitr's "spin" format.
 This is in turn sent to \code{knitr::spin}, and converted to
 Markdown and HTML (or one of several other formats).
 
@@ -30,7 +30,7 @@ Special Markup:
 \item{\code{"/*' "} - Begin document text, ends with \code{"'*/"}}
 \item{\code{"/*+ "} - Begin chunk header, ends with \code{"+*/"}}
 \item{\code{"/*R "} - Begin a chunk of R code, ends with \code{"R*/"}}
-\item{\code{"*/* "} - Dropped from document, ends with
+\item{\code{"/** "} - Dropped from document, ends with
 \code{"*/*"}}
 }
 
@@ -72,7 +72,7 @@ R*/
 
 /*' You can use the ***usual*** Markdown to mark up text.'*/
 "
-if (!is.null(Statamarkdown::find_stata())) {
+if (nzchar(Statamarkdown::find_stata())) {
   # To run this example, remove tempdir().
   fhtml <- file.path(tempdir(), "test.html")
   x<-Statamarkdown::spinstata(text=indoc)

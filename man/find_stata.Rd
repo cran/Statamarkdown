@@ -9,7 +9,7 @@ automatically when \pkg{Statamarkdown} is loaded.
 This function searches for recent versions of Stata (>= Stata 11),
 in some of the usual default installation locations.
 
-If Stata is not found, you will have to specify it's
+If Stata is not found, you will have to specify its
 correct location yourself.
 
 }
@@ -45,7 +45,7 @@ summarize price gpm
 ```
 '
 
-if (!is.null(Statamarkdown::find_stata())) {
+if (nzchar(Statamarkdown::find_stata())) {
   # To run this example, remove tempdir().
   fmd <- file.path(tempdir(), "test.md")
   fhtml <- file.path(tempdir(), "test.html")
